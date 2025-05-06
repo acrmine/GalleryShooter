@@ -17,7 +17,8 @@ class Bullet extends Phaser.GameObjects.Sprite
         scene.load.setPath("./assets/");
 
         scene.load.image("smallBullet", "player_sms.png");
-        scene.load.image("bigBullet", "player_bgs.png")
+        scene.load.image("bigBullet", "player_bgs.png");
+        scene.load.image("enemyShot", "enemy_sms.png");
     }
 
     update() 

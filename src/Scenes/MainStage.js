@@ -13,6 +13,7 @@ class MovementTest extends Phaser.Scene
     {
         Player.preload(this);
         Bullet.preload(this);
+        Enemy.preload(this);
     }
 
     create()
@@ -22,7 +23,8 @@ class MovementTest extends Phaser.Scene
         this.left = this.input.keyboard.addKey("LEFT");
         this.right = this.input.keyboard.addKey("RIGHT");
 
-        my.sprite.player = new Player(this, game.config.width/2, game.config.height - 100, "playerShip", null, this.left, this.right, this.playerSpeed);
+        my.sprite.player = new Player(this, game.config.width/2, game.config.height - 100, "playerShip", 
+                                      null, this.left, this.right, this.playerSpeed, "smallBullet", 1);
         my.sprite.player.setScale(0.2);
         my.sprite.player.setDepth(1);
 
@@ -32,8 +34,22 @@ class MovementTest extends Phaser.Scene
             runChildUpdate: true
         });
 
-        my.sprite.player.createShootEvent(this, 'SPACE', "smallBullet", 3, this.bulletSpeed, my.sprite.bulletGroup);
+        my.sprite.enemyGroup = this.add.group({
+            active: true,
+            maxSize: -1,
+            runChildUpdate: true
+        });
+
+        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemySmall", null, 5, my.sprite.enemyGroup));
+
+        my.sprite.player.createShootEvent(this, 'SPACE', this.bulletSpeed, my.sprite.bulletGroup);
     }
+
+    // enemySpawner()
+    // {
+    //     let my = this.my;
+
+    // }
 
     update()
     {
