@@ -24,18 +24,26 @@ class Player extends Phaser.GameObjects.Sprite
         scene.load.image("playerShip", "player_ship_std.png");
     }
 
-    createShootEvent(scene, fireKey, bulletGroup)
+    // amount must be an odd number
+    createShootEvent(scene, fireKey, texture, amount, bulletSpeed, bulletGroup)
     {
-        let bullet = null;
         scene.input.keyboard.on('keydown-' + fireKey, (event) =>
         {
-            bullet = bulletGroup.getFirstDead();
-
-            if(bullet != null)
+            bulletGroup.add(new Bullet(scene, this.x, this.y - (this.displayHeight/4),
+                                       texture, null, bulletSpeed, bulletGroup), 
+                                       true);
+            
+            let extrAmnt = Math.trunc(amount/2);
+            let offset;
+            for(let i = 0; i < extrAmnt; i++)
             {
-                bullet.makeActive();
-                bullet.x = this.x;
-                bullet.y = this.y - (this.displayHeight/4);
+                offset = i * 10;
+                bulletGroup.add(new Bullet(scene, this.x - (this.displayWidth/6) - offset, this.y,
+                                           texture, null, bulletSpeed, bulletGroup), 
+                                           true);
+                bulletGroup.add(new Bullet(scene, this.x + (this.displayWidth/6) + offset, this.y,
+                                           texture, null, bulletSpeed, bulletGroup), 
+                                           true);
             }
         });
     }

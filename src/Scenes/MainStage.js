@@ -26,22 +26,13 @@ class MovementTest extends Phaser.Scene
         my.sprite.player.setScale(0.2);
         my.sprite.player.setDepth(1);
 
-        my.sprite.smallBulletGroup = this.add.group({
+        my.sprite.bulletGroup = this.add.group({
             active: true,
-            defaultKey: "smallBullet",
-            maxSize: 100,
+            maxSize: -1,
             runChildUpdate: true
         });
 
-        my.sprite.smallBulletGroup.createMultiple({
-            classType: Bullet,
-            active: false,
-            key: my.sprite.smallBulletGroup.defaultKey,
-            repeat: my.sprite.smallBulletGroup.maxSize-1
-        });
-        my.sprite.smallBulletGroup.propertyValueSet("speed", this.bulletSpeed);
-
-        my.sprite.player.createShootEvent(this, 'SPACE', my.sprite.smallBulletGroup);
+        my.sprite.player.createShootEvent(this, 'SPACE', "smallBullet", 3, this.bulletSpeed, my.sprite.bulletGroup);
     }
 
     update()

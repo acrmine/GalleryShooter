@@ -1,9 +1,11 @@
 class Bullet extends Phaser.GameObjects.Sprite 
 {
-    constructor(scene, x, y, texture, frame) 
+    constructor(scene, x, y, texture, frame, bulletSpeed, group) 
     {        
         super(scene, x, y, texture, frame);
-        
+        this.bulletSpeed = bulletSpeed;
+        this.group = group;
+
         this.setScale(0.15);
         scene.add.existing(this);
 
@@ -15,16 +17,17 @@ class Bullet extends Phaser.GameObjects.Sprite
         scene.load.setPath("./assets/");
 
         scene.load.image("smallBullet", "player_sms.png");
+        scene.load.image("bigBullet", "player_bgs.png")
     }
 
     update() 
     {
         if (this.active) 
         {
-            this.y -= this.speed;
+            this.y -= this.bulletSpeed;
             if (this.y < -(this.displayHeight/2)) 
             {
-                this.makeInactive();
+                this.group.remove(this, true);
             }
         }
     }
