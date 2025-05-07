@@ -8,6 +8,7 @@ class Player extends Phaser.GameObjects.Sprite
     {
         super(scene, x, y, texture, frame);
 
+        this.scene = scene
         this.left = leftKey;
         this.right = rightKey;
         this.playerSpeed = playerSpeed;
@@ -27,11 +28,11 @@ class Player extends Phaser.GameObjects.Sprite
     }
 
     // amount must be an odd number
-    createShootEvent(scene, fireKey, bulletSpeed, bulletGroup)
+    createShootEvent(fireKey, bulletSpeed, bulletGroup)
     {
-        scene.input.keyboard.on('keydown-' + fireKey, (event) =>
+        this.scene.input.keyboard.on('keydown-' + fireKey, (event) =>
         {
-            bulletGroup.add(new Bullet(scene, this.x, this.y - (this.displayHeight/4),
+            bulletGroup.add(new Bullet(this.scene, this.x, this.y - (this.displayHeight/4),
                                        this.bulletTexture, null, bulletSpeed, bulletGroup), 
                                        true);
             
@@ -40,10 +41,10 @@ class Player extends Phaser.GameObjects.Sprite
             for(let i = 0; i < extrAmnt; i++)
             {
                 offset = i * 10;
-                bulletGroup.add(new Bullet(scene, this.x - (this.displayWidth/6) - offset, this.y,
+                bulletGroup.add(new Bullet(this.scene, this.x - (this.displayWidth/6) - offset, this.y,
                                            this.bulletTexture, null, bulletSpeed, bulletGroup), 
                                            true);
-                bulletGroup.add(new Bullet(scene, this.x + (this.displayWidth/6) + offset, this.y,
+                bulletGroup.add(new Bullet(this.scene, this.x + (this.displayWidth/6) + offset, this.y,
                                            this.bulletTexture, null, bulletSpeed, bulletGroup), 
                                            true);
             }

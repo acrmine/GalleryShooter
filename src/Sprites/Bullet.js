@@ -6,9 +6,19 @@ class Bullet extends Phaser.GameObjects.Sprite
         this.textureName = texture;
         this.bulletSpeed = bulletSpeed;
         this.group = group;
+        this.collidePlayer = false;
 
         this.setScale(0.15);
+
+        if(this.textureName === "enemyShot")
+        {
+            this.flipY = true;
+            this.collidePlayer = true;
+        }
         scene.add.existing(this);
+
+        this.bottBound = game.config.height + (this.displayHeight/2);
+        this.topBound = -(this.displayHeight/2);
 
         return this;
     }
@@ -29,7 +39,7 @@ class Bullet extends Phaser.GameObjects.Sprite
             if(this.textureName === "smallBullet" || this.textureName === "bigBullet")
             {
                 this.y -= this.bulletSpeed;
-                if (this.y < -(this.displayHeight/2)) 
+                if (this.y < this.topBound) 
                 {
                     this.group.remove(this, true);
                 }
@@ -37,7 +47,7 @@ class Bullet extends Phaser.GameObjects.Sprite
             if(this.textureName === "enemyShot")
             {
                 this.y += this.bulletSpeed;
-                if (this.y > game.config.height + (this.displayHeight/2)) 
+                if (this.y > this.bottBound) 
                 {
                     this.group.remove(this, true);
                 }

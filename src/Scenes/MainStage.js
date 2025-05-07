@@ -40,9 +40,14 @@ class MovementTest extends Phaser.Scene
             runChildUpdate: true
         });
 
-        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemySmall", null, 5, my.sprite.enemyGroup));
+        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemySmall", null, 5, 
+                                           my.sprite.enemyGroup, my.sprite.bulletGroup));
+        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemyJuke", null, 5, 
+                                           my.sprite.enemyGroup, my.sprite.bulletGroup));
+        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemyShoot", null, 5, 
+                                           my.sprite.enemyGroup, my.sprite.bulletGroup));
 
-        my.sprite.player.createShootEvent(this, 'SPACE', this.bulletSpeed, my.sprite.bulletGroup);
+        my.sprite.player.createShootEvent('SPACE', this.bulletSpeed, my.sprite.bulletGroup);
     }
 
     // enemySpawner()
