@@ -12,6 +12,7 @@ class Enemy extends Phaser.GameObjects.Sprite
         this.bulletSpeed = bulletSpeed;
         this.bulletTexture = bulletTexture;
         this.health = health;
+        this.scoreValue = 0;
 
         this.y = -(this.displayHeight/2);
         if(x == 0)
@@ -20,6 +21,7 @@ class Enemy extends Phaser.GameObjects.Sprite
 
         if(this.textureName === "enemyJuke")
         {
+            this.scoreValue = 100;
             this.jukeAngle = 60;
             this.direction = true;
 
@@ -33,6 +35,7 @@ class Enemy extends Phaser.GameObjects.Sprite
             this.jukeXSpeed = this.enemySpeed * this.jukeSlope;
         } else if(this.textureName === "enemyShoot")
         {
+            this.scoreValue = 200;
             this.setScale(0.2);
             this.setDepth(2);
             this.shootInterval = 1/4;
@@ -42,6 +45,7 @@ class Enemy extends Phaser.GameObjects.Sprite
             this.travelGoal = (game.config.height-100) * this.shootInterval;
         } else
         {
+            this.scoreValue = 50;
             this.setScale(0.15);
         }
         
@@ -159,25 +163,30 @@ class Enemy extends Phaser.GameObjects.Sprite
                     if(Util.collides(this, bullet))
                     {
                         this.health -= 1;
-                        this.updateHealth();
+                        this.checkHealth();
                         bullet.destroySelf();
                     }
                 }
             }
+            if(Util.collides(this, this.scene.my.sprite.player))
+            {
+                this.scene.my.sprite.player.health -= 1;
+                this.scene.my.sprite.player.renderHealth();
+                this.destroySelf();
+            }
         }
     }
 
-    updateHealth()
+    checkHealth()
     {
         if(this.health <= 0)
+        {
+            this.scene.my.sprite.player.updateScore(this.scoreValue);
             this.destroySelf();
+        }
     }
 
-    destroySelf()
-    {
-        this.enemyGroup.remove(this, true);
-        this.destroy();
-    }
+    destroySelf() { this.enemyGroup.remove(this, true); }
 
     makeActive() 
     {

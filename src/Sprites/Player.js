@@ -26,7 +26,12 @@ class Player extends Phaser.GameObjects.Sprite
         this.healthWidth = healthTexture.width * this.healthIconScale;
         this.healthHeight = healthTexture.height * this.healthIconScale;
 
+        this.deathWait = 100;
+        this.currentTime = 0;
         this.renderHealth();
+        this.score = 0;
+        this.scoreLabel = scene.add.bitmapText(game.config.width - 8, 30, "block_font", "Score: " + this.score, 30).setOrigin(1).setDepth(4);
+
 
         this.rx = this.displayWidth/2;
         this.ry = this.displayHeight/2;
@@ -42,6 +47,7 @@ class Player extends Phaser.GameObjects.Sprite
 
         scene.load.image("playerShip", "player_ship_std.png");
         scene.load.image("healthIcon", "health_icon.png");
+        scene.load.bitmapFont("block_font", "block_font_0.png", "block_font.fnt");
     }
 
     // amount must be an odd number
@@ -70,36 +76,48 @@ class Player extends Phaser.GameObjects.Sprite
 
     update() 
     {
-        // Moving left
-        if (this.left.isDown) 
+        if(this.active)
         {
-            // Check to make sure the sprite can actually move left
-            if (this.x > (this.displayWidth/2)) 
+            // Moving left
+            if (this.left.isDown) 
             {
-                this.x -= this.playerSpeed;
-            }
-        }
-
-        // Moving right
-        if (this.right.isDown) 
-        {
-            // Check to make sure the sprite can actually move right
-            if (this.x < (game.config.width - (this.displayWidth/2))) 
-            {
-                this.x += this.playerSpeed;
-            }
-        }
-
-        for(let bullet of this.bulletGroup.getChildren())
-        {
-            if(bullet.collidePlayer)
-            {
-                if(Util.collides(this, bullet))
+                // Check to make sure the sprite can actually move left
+                if (this.x > (this.displayWidth/2)) 
                 {
-                    bullet.destroySelf();
-                    this.health -= 1;
-                    this.renderHealth();
+                    this.x -= this.playerSpeed;
                 }
+            }
+
+            // Moving right
+            if (this.right.isDown) 
+            {
+                // Check to make sure the sprite can actually move right
+                if (this.x < (game.config.width - (this.displayWidth/2))) 
+                {
+                    this.x += this.playerSpeed;
+                }
+            }
+
+            for(let bullet of this.bulletGroup.getChildren())
+            {
+                if(bullet.collidePlayer)
+                {
+                    if(Util.collides(this, bullet))
+                    {
+                        bullet.destroySelf();
+                        this.health -= 1;
+                        this.renderHealth();
+                    }
+                }
+            }
+        }
+
+        if(this.health <= 0)
+        {
+            this.currentTime += 1;
+            if(this.currentTime == this.deathWait)
+            {
+                this.scene.scene.start("deathScreen");
             }
         }
     }
@@ -112,7 +130,6 @@ class Player extends Phaser.GameObjects.Sprite
             heart.visible = false;
             heart.active = false;
         }
-        this.healthIcons = [];
 
         let xPos = 0;
         let yPos = 0;
@@ -129,5 +146,22 @@ class Player extends Phaser.GameObjects.Sprite
                 this.healthIcons.push(this.scene.add.sprite(xPos, yPos, "healthIcon").setScale(this.healthIconScale));
             }
         }
+        if(this.health <= 0)
+        {
+            this.visible = false;
+            this.active = false;
+            this.rx = 0;
+            this.ry = 0;
+        }
+    }
+
+    updateScore(valToAdd, newScore = null)
+    {
+        this.score += valToAdd;
+        if(newScore != null)
+        {
+            this.score == newScore
+        }
+        this.scoreLabel.setText("Score: " + this.score);
     }
 }

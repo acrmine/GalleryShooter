@@ -1,8 +1,8 @@
-class MovementTest extends Phaser.Scene
+class MainStage extends Phaser.Scene
 {
     constructor()
     {
-        super("movementTest");
+        super("mainStage");
         this.my = {sprite: {}};
 
         this.playerSpeed = 10;
