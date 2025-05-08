@@ -48,11 +48,6 @@ class MovementTest extends Phaser.Scene
 
         this.createBackground("starBackground");
 
-        my.sprite.player = new Player(this, game.config.width/2, game.config.height - 100, "playerShip", 
-                                      null, this.left, this.right, this.playerSpeed, "smallBullet", 1);
-        my.sprite.player.setScale(0.2);
-        my.sprite.player.setDepth(1);
-
         my.sprite.bulletGroup = this.add.group({
             active: true,
             maxSize: -1,
@@ -65,14 +60,14 @@ class MovementTest extends Phaser.Scene
             runChildUpdate: true
         });
 
-        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemySmall", null, 5, 
-                                           my.sprite.enemyGroup, my.sprite.bulletGroup));
-        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemyJuke", null, 5, 
-                                           my.sprite.enemyGroup, my.sprite.bulletGroup));
-        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemyShoot", null, 5, 
-                                           my.sprite.enemyGroup, my.sprite.bulletGroup));
+        my.sprite.player = new Player(this, game.config.width/2, game.config.height - 100, "playerShip", 
+                                      null, this.left, this.right, this.playerSpeed, "smallBullet", 1);
 
-        my.sprite.player.createShootEvent('SPACE', this.bulletSpeed, my.sprite.bulletGroup);
+        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemySmall", null, 5));
+        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemyJuke", null, 5));
+        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemyShoot", null, 5));
+
+        my.sprite.player.createShootEvent('SPACE', this.bulletSpeed);
     }
 
     // enemySpawner()
@@ -83,10 +78,8 @@ class MovementTest extends Phaser.Scene
 
     update()
     {
-        let my = this.my;
+        this.my.sprite.player.update();
 
-        my.sprite.player.update();
-
-        this.updateBackground(10);
+        this.updateBackground(9);
     }
 }

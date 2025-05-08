@@ -8,14 +8,28 @@ class Player extends Phaser.GameObjects.Sprite
                 startHealth = 3) 
     {
         super(scene, x, y, texture, frame);
+        this.setScale(0.2);
+        this.setDepth(1);
 
         this.scene = scene
         this.left = leftKey;
         this.right = rightKey;
         this.playerSpeed = playerSpeed;
         this.bulletTexture = bulletTexture;
+        this.bulletGroup = scene.my.sprite.bulletGroup;
         this.shotAmnt = shotAmnt;
         this.health = startHealth;
+        this.healthIcons = [];
+
+        let healthTexture = scene.textures.get("healthIcon").getSourceImage();
+        this.healthIconScale = 0.13;
+        this.healthWidth = healthTexture.width * this.healthIconScale;
+        this.healthHeight = healthTexture.height * this.healthIconScale;
+
+        this.renderHealth();
+
+        this.rx = this.displayWidth/2;
+        this.ry = this.displayHeight/2;
 
         scene.add.existing(this);
 
@@ -27,15 +41,16 @@ class Player extends Phaser.GameObjects.Sprite
         scene.load.setPath("./assets/");
 
         scene.load.image("playerShip", "player_ship_std.png");
+        scene.load.image("healthIcon", "health_icon.png");
     }
 
     // amount must be an odd number
-    createShootEvent(fireKey, bulletSpeed, bulletGroup)
+    createShootEvent(fireKey, bulletSpeed)
     {
         this.scene.input.keyboard.on('keydown-' + fireKey, (event) =>
         {
-            bulletGroup.add(new Bullet(this.scene, this.x, this.y - (this.displayHeight/4),
-                                       this.bulletTexture, null, bulletSpeed, bulletGroup), 
+            this.bulletGroup.add(new Bullet(this.scene, this.x, this.y - (this.displayHeight/4),
+                                       this.bulletTexture, null, bulletSpeed), 
                                        true);
             
             let extrAmnt = Math.trunc(this.shotAmnt/2);
@@ -43,11 +58,11 @@ class Player extends Phaser.GameObjects.Sprite
             for(let i = 0; i < extrAmnt; i++)
             {
                 offset = i * 10;
-                bulletGroup.add(new Bullet(this.scene, this.x - (this.displayWidth/6) - offset, this.y,
-                                           this.bulletTexture, null, bulletSpeed, bulletGroup), 
+                this.bulletGroup.add(new Bullet(this.scene, this.x - (this.displayWidth/6) - offset, this.y,
+                                           this.bulletTexture, null, bulletSpeed), 
                                            true);
-                bulletGroup.add(new Bullet(this.scene, this.x + (this.displayWidth/6) + offset, this.y,
-                                           this.bulletTexture, null, bulletSpeed, bulletGroup), 
+                this.bulletGroup.add(new Bullet(this.scene, this.x + (this.displayWidth/6) + offset, this.y,
+                                           this.bulletTexture, null, bulletSpeed), 
                                            true);
             }
         });
@@ -73,6 +88,37 @@ class Player extends Phaser.GameObjects.Sprite
             {
                 this.x += this.playerSpeed;
             }
+        }
+
+        for(let bullet of this.bulletGroup.getChildren())
+        {
+            if(bullet.collidePlayer)
+            {
+                if(Util.collides(this, bullet))
+                {
+                    bullet.destroySelf();
+                    this.health -= 1;
+                    this.renderHealth();
+                }
+            }
+        }
+    }
+
+    renderHealth()
+    {
+        let offset = 6;
+        for(let heart of this.healthIcons)
+        {
+            heart.visible = false;
+            heart.active = false;
+            heart.destory();
+        }
+        this.healthIcons = [];
+
+        for(let i = 1; i <= this.health; i++)
+        {
+            this.healthIcons.push(this.scene.add.sprite((i * offset) + (this.healthWidth/2) + ((i-1) * this.healthWidth), 
+                                                    game.config.height - (offset + this.healthHeight/2), "healthIcon").setScale(this.healthIconScale));
         }
     }
 }

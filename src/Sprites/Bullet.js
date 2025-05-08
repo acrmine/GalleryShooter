@@ -1,11 +1,11 @@
 class Bullet extends Phaser.GameObjects.Sprite 
 {
-    constructor(scene, x, y, texture, frame, bulletSpeed, group) 
+    constructor(scene, x, y, texture, frame, bulletSpeed) 
     {        
         super(scene, x, y, texture, frame);
         this.textureName = texture;
         this.bulletSpeed = bulletSpeed;
-        this.group = group;
+        this.bulletGroup = scene.my.sprite.bulletGroup;
         this.collidePlayer = false;
 
         this.setScale(0.15);
@@ -19,6 +19,9 @@ class Bullet extends Phaser.GameObjects.Sprite
 
         this.bottBound = game.config.height + (this.displayHeight/2);
         this.topBound = -(this.displayHeight/2);
+
+        this.rx = this.displayWidth/2;
+        this.ry = this.displayHeight/2;
 
         return this;
     }
@@ -41,7 +44,7 @@ class Bullet extends Phaser.GameObjects.Sprite
                 this.y -= this.bulletSpeed;
                 if (this.y < this.topBound) 
                 {
-                    this.group.remove(this, true);
+                    this.destroySelf();
                 }
             }
             if(this.textureName === "enemyShot")
@@ -49,10 +52,16 @@ class Bullet extends Phaser.GameObjects.Sprite
                 this.y += this.bulletSpeed;
                 if (this.y > this.bottBound) 
                 {
-                    this.group.remove(this, true);
+                    this.destroySelf();
                 }
             }
         }
+    }
+
+    destroySelf()
+    {
+        this.bulletGroup.remove(this, true);
+        this.destroy();
     }
 
     makeActive() 

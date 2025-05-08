@@ -1,16 +1,17 @@
 class Enemy extends Phaser.GameObjects.Sprite 
 {
-    constructor(scene, x, y, texture, frame, enemySpeed, enemyGroup, 
-                bulletGroup, bulletSpeed = 10, bulletTexture = "enemyShot") 
+    constructor(scene, x, y, texture, frame, enemySpeed,
+                health = 3, bulletSpeed = 10, bulletTexture = "enemyShot") 
     {        
         super(scene, x, y, texture, frame);
         this.scene = scene;
         this.textureName = texture;
         this.enemySpeed = enemySpeed;
-        this.enemyGroup = enemyGroup;
-        this.bulletGroup = bulletGroup;
+        this.enemyGroup = scene.my.sprite.enemyGroup;
+        this.bulletGroup = scene.my.sprite.bulletGroup;
         this.bulletSpeed = bulletSpeed;
         this.bulletTexture = bulletTexture;
+        this.health = health;
 
         this.y = -(this.displayHeight/2);
         if(x == 0)
@@ -50,6 +51,9 @@ class Enemy extends Phaser.GameObjects.Sprite
         this.rightBound = game.config.width - (this.displayWidth/2);
         this.bottBound = game.config.height + (this.displayHeight/2);
         this.topBound = -(this.displayHeight/2);
+
+        this.rx = this.displayWidth/2;
+        this.ry = this.displayHeight/2;
 
         return this;
     }
@@ -109,7 +113,7 @@ class Enemy extends Phaser.GameObjects.Sprite
                     }else if(this.y > this.travelGoal-100 && this.bulletFired == false)
                     {
                         this.bulletGroup.add(new Bullet(this.scene, this.x, this.y + (this.displayHeight/4),
-                                                        this.bulletTexture, null, this.bulletSpeed, this.bulletGroup), 
+                                                        this.bulletTexture, null, this.bulletSpeed), 
                                                         true);
                         this.bulletFired = true;
                     }
@@ -147,7 +151,32 @@ class Enemy extends Phaser.GameObjects.Sprite
                     this.x = Util.getRndInteger(this.leftBound, this.rightBound);
                 }
             }
+
+            for(let bullet of this.bulletGroup.getChildren())
+            {
+                if(!bullet.collidePlayer)
+                {
+                    if(Util.collides(this, bullet))
+                    {
+                        this.health -= 1;
+                        this.updateHealth();
+                        bullet.destroySelf();
+                    }
+                }
+            }
         }
+    }
+
+    updateHealth()
+    {
+        if(this.health <= 0)
+            this.destroySelf();
+    }
+
+    destroySelf()
+    {
+        this.enemyGroup.remove(this, true);
+        this.destroy();
     }
 
     makeActive() 
