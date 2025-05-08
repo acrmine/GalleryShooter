@@ -111,14 +111,23 @@ class Player extends Phaser.GameObjects.Sprite
         {
             heart.visible = false;
             heart.active = false;
-            heart.destory();
         }
         this.healthIcons = [];
 
+        let xPos = 0;
+        let yPos = 0;
         for(let i = 1; i <= this.health; i++)
         {
-            this.healthIcons.push(this.scene.add.sprite((i * offset) + (this.healthWidth/2) + ((i-1) * this.healthWidth), 
-                                                    game.config.height - (offset + this.healthHeight/2), "healthIcon").setScale(this.healthIconScale));
+            xPos = (i * offset) + (this.healthWidth/2) + ((i-1) * this.healthWidth);
+            yPos = game.config.height - (offset + this.healthHeight/2);
+            if(i <= this.healthIcons.length)
+            {
+                this.healthIcons[i - 1].active = true;
+                this.healthIcons[i - 1].visible = true;
+            }else
+            {
+                this.healthIcons.push(this.scene.add.sprite(xPos, yPos, "healthIcon").setScale(this.healthIconScale));
+            }
         }
     }
 }
