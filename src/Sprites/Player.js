@@ -4,7 +4,8 @@ class Player extends Phaser.GameObjects.Sprite
     // spriteKey - key for the sprite image asset
     // leftKey - key for moving left
     // rightKey - key for moving right
-    constructor(scene, x, y, texture, frame, leftKey, rightKey, playerSpeed, bulletTexture, shotAmnt) 
+    constructor(scene, x, y, texture, frame, leftKey, rightKey, playerSpeed, bulletTexture, shotAmnt,
+                startHealth = 3) 
     {
         super(scene, x, y, texture, frame);
 
@@ -14,6 +15,7 @@ class Player extends Phaser.GameObjects.Sprite
         this.playerSpeed = playerSpeed;
         this.bulletTexture = bulletTexture;
         this.shotAmnt = shotAmnt;
+        this.health = startHealth;
 
         scene.add.existing(this);
 

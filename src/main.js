@@ -23,6 +23,12 @@ let config = {
         forceSetTimeOut: true, 
         target: 30 
     },
+    physics: {
+        default: "matter",
+        matter: {
+            debug: true
+        }
+    },
     width: 600,
     height: 800,
     scene: [MovementTest]

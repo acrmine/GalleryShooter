@@ -5,7 +5,7 @@ class MovementTest extends Phaser.Scene
         super("movementTest");
         this.my = {sprite: {}};
 
-        this.playerSpeed = 5;
+        this.playerSpeed = 10;
         this.bulletSpeed = 10;
     }
 
@@ -14,6 +14,29 @@ class MovementTest extends Phaser.Scene
         Player.preload(this);
         Bullet.preload(this);
         Enemy.preload(this);
+
+        this.load.image("starBackground", "star_background.gif");
+    }
+
+    createBackground(textureName)
+    {
+        this.backgroundSprites = [];
+        this.backgroundSprites.push(this.add.tileSprite(game.config.width/2, game.config.height/2, 
+                                                        game.config.width, game.config.height, textureName));
+        this.backgroundSprites.push(this.add.tileSprite(game.config.width/2, -(game.config.height/2), 
+                                                        game.config.width, game.config.height, textureName));
+    }
+
+    updateBackground(speed)
+    {
+        let backgroundSprite1 = this.backgroundSprites[0];
+        let backgroundSprite2 = this.backgroundSprites[1];
+        backgroundSprite1.y += speed;
+        backgroundSprite2.y += speed;
+        if(backgroundSprite1.y > game.config.height * 1.5)
+            backgroundSprite1.y = backgroundSprite2.y - game.config.height;
+        if(backgroundSprite2.y > game.config.height * 1.5)
+            backgroundSprite2.y = backgroundSprite1.y - game.config.height;
     }
 
     create()
@@ -22,6 +45,8 @@ class MovementTest extends Phaser.Scene
 
         this.left = this.input.keyboard.addKey("LEFT");
         this.right = this.input.keyboard.addKey("RIGHT");
+
+        this.createBackground("starBackground");
 
         my.sprite.player = new Player(this, game.config.width/2, game.config.height - 100, "playerShip", 
                                       null, this.left, this.right, this.playerSpeed, "smallBullet", 1);
@@ -61,5 +86,7 @@ class MovementTest extends Phaser.Scene
         let my = this.my;
 
         my.sprite.player.update();
+
+        this.updateBackground(10);
     }
 }
