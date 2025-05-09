@@ -68,17 +68,20 @@ class Util
                     player.transferToWin();
                 }
 
-                for(let i = 0; i < waveConfig[player.currWave-1][0][player.currPhase]; i++)
+                if(player.currWave-1 < waveConfig.length)
                 {
-                    scene.my.sprite.enemyGroup.add(new Enemy(scene, 0, 0, "enemySmall", null, 5));
-                }
-                for(let i = 0; i < waveConfig[player.currWave-1][1][player.currPhase]; i++)
-                {
-                    scene.my.sprite.enemyGroup.add(new Enemy(scene, 0, 0, "enemyJuke", null, 5));
-                }
-                for(let i = 0; i < waveConfig[player.currWave-1][2][player.currPhase]; i++)
-                {
-                    scene.my.sprite.enemyGroup.add(new Enemy(scene, 0, 0, "enemyShoot", null, 5));
+                    for(let i = 0; i < waveConfig[player.currWave-1][0][player.currPhase]; i++)
+                    {
+                        scene.my.sprite.enemyGroup.add(new Enemy(scene, 0, 0, "enemySmall", null, 5));
+                    }
+                    for(let i = 0; i < waveConfig[player.currWave-1][1][player.currPhase]; i++)
+                    {
+                        scene.my.sprite.enemyGroup.add(new Enemy(scene, 0, 0, "enemyJuke", null, 5));
+                    }
+                    for(let i = 0; i < waveConfig[player.currWave-1][2][player.currPhase]; i++)
+                    {
+                        scene.my.sprite.enemyGroup.add(new Enemy(scene, 0, 0, "enemyShoot", null, 5));
+                    }
                 }
 
                 player.currPhase += 1;
