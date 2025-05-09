@@ -7,6 +7,42 @@ class MainStage extends Phaser.Scene
 
         this.playerSpeed = 10;
         this.bulletSpeed = 10;
+
+        this.waitBetweenWaves = 30;
+        this.timer = 0;
+
+        this.waveConfig = [
+            [
+                [1, 1, 2],
+                [0, 1, 1],
+                [0, 0, 0]
+            ],
+            [
+                [0, 1, 1],
+                [0, 0, 1],
+                [1, 1, 1]
+            ],
+            [
+                [1, 2, 2],
+                [2, 0, 1],
+                [1, 2, 3]
+            ],
+            [
+                [4, 6, 8],
+                [0, 0, 0],
+                [0, 0, 0]
+            ],
+            [
+                [0, 0, 0],
+                [3, 6, 9],
+                [0, 0, 0]
+            ],
+            [
+                [0, 0, 0],
+                [0, 0, 0],
+                [2, 4, 6]
+            ]
+        ];
     }
 
     preload()
@@ -40,23 +76,15 @@ class MainStage extends Phaser.Scene
         my.sprite.player = new Player(this, game.config.width/2, game.config.height - 100, "playerShip", 
                                       null, this.left, this.right, this.playerSpeed, "smallBullet", 1);
 
-        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemySmall", null, 5));
-        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemyJuke", null, 5));
-        my.sprite.enemyGroup.add(new Enemy(this, 0, 0, "enemyShoot", null, 5));
-
         my.sprite.player.createShootEvent('SPACE', this.bulletSpeed);
     }
-
-    // enemySpawner()
-    // {
-    //     let my = this.my;
-
-    // }
 
     update()
     {
         this.my.sprite.player.update();
 
         Util.updateBackground(this, 9);
+
+        Util.maintainEnemies(this, this.waveConfig, 30)
     }
 }

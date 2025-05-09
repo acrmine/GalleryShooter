@@ -30,8 +30,11 @@ class Player extends Phaser.GameObjects.Sprite
         this.currentTime = 0;
         this.renderHealth();
         this.score = 0;
-        this.scoreLabel = scene.add.bitmapText(game.config.width - 8, 4, "block_font", "Score: " + this.score, 30).setOrigin(1, 0).setDepth(4);
+        this.scoreLabel = scene.add.bitmapText(game.config.width - 8, 4, "blockFont", "Score: " + this.score, 30).setOrigin(1, 0).setDepth(4);
 
+        this.currPhase = 0;
+        this.currWave = 1;
+        this.waveLabel = scene.add.bitmapText(game.config.width/2, 4, "blockFont", "Wave: " + this.currWave, 30).setOrigin(0.5, 0).setDepth(4);
 
         this.rx = this.displayWidth/2;
         this.ry = this.displayHeight/2;
@@ -47,7 +50,6 @@ class Player extends Phaser.GameObjects.Sprite
 
         scene.load.image("playerShip", "player_ship_std.png");
         scene.load.image("healthIcon", "health_icon.png");
-        scene.load.bitmapFont("block_font", "block_font_0.png", "block_font.fnt");
     }
 
     // amount must be an odd number
@@ -161,5 +163,16 @@ class Player extends Phaser.GameObjects.Sprite
             this.score == newScore
         }
         this.scoreLabel.setText("Score: " + this.score);
+    }
+
+    updateWaveLabel()
+    {
+        this.waveLabel.setText("Wave: " + this.currWave);
+    }
+
+    transferToWin()
+    {
+        Util.playerScore = this.score;
+        this.scene.scene.start("winScreen");
     }
 }

@@ -11,10 +11,7 @@ class TitleScreen extends Phaser.Scene
 
     preload()
     {
-        this.load.setPath("./assets/");
-
-        this.load.bitmapFont("pixelFont", "pixel_font_0.png", "pixel_font.fnt");
-        this.load.image("starBackground", "star_background.gif");
+        Util.preloadAssets(this);
     }
 
     create()

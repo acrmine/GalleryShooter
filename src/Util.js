@@ -1,5 +1,7 @@
 class Util
 {
+    static playerScore = 0;
+
     static getRndInteger(min, max) 
     {
         return Math.floor(Math.random() * (max - min + 1) ) + min;
@@ -12,6 +14,16 @@ class Util
         if (Math.abs(objectA.y - objectB.y) > (objectA.ry + objectB.ry)) 
             return false;
         return true;
+    }
+
+    static preloadAssets(scene)
+    {
+        scene.load.setPath("./assets/");
+
+        scene.load.bitmapFont("pixelFont", "pixel_font_0.png", "pixel_font.fnt");
+        scene.load.bitmapFont("blockFont", "block_font_0.png", "block_font.fnt");
+        scene.load.image("starBackground", "star_background.gif");
+        scene.load.image("nightSky", "8bit-pixel-art-night-sky.jpg");
     }
 
     static createBackground(scene, textureName)
@@ -33,5 +45,44 @@ class Util
             backgroundSprite1.y = backgroundSprite2.y - game.config.height;
         if(backgroundSprite2.y > game.config.height * 1.5)
             backgroundSprite2.y = backgroundSprite1.y - game.config.height;
+    }
+
+    // requires a scene variable "timer"
+    static maintainEnemies(scene, waveConfig, waitBetweenWaves)
+    {
+        scene.timer -= 1;
+        if(scene.timer <= 0)
+        {
+            if(scene.my.sprite.enemyGroup.getLength() == 0)
+            {
+                let player = scene.my.sprite.player;
+                if(player.currPhase == 3)
+                {
+                    scene.timer = waitBetweenWaves;
+                    player.currPhase = 0;
+                    player.currWave += 1;
+                    player.updateWaveLabel();
+                }
+                if(player.currWave > waveConfig.length)
+                {
+                    player.transferToWin();
+                }
+
+                for(let i = 0; i < waveConfig[player.currWave-1][0][player.currPhase]; i++)
+                {
+                    scene.my.sprite.enemyGroup.add(new Enemy(scene, 0, 0, "enemySmall", null, 5));
+                }
+                for(let i = 0; i < waveConfig[player.currWave-1][1][player.currPhase]; i++)
+                {
+                    scene.my.sprite.enemyGroup.add(new Enemy(scene, 0, 0, "enemyJuke", null, 5));
+                }
+                for(let i = 0; i < waveConfig[player.currWave-1][2][player.currPhase]; i++)
+                {
+                    scene.my.sprite.enemyGroup.add(new Enemy(scene, 0, 0, "enemyShoot", null, 5));
+                }
+
+                player.currPhase += 1;
+            }
+        }
     }
 }
