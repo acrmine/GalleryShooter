@@ -168,11 +168,14 @@ class Enemy extends Phaser.GameObjects.Sprite
                     }
                 }
             }
-            if(Util.collides(this, this.scene.my.sprite.player))
+            if(this.scene.my.sprite.player.active)
             {
-                this.scene.my.sprite.player.health -= 1;
-                this.scene.my.sprite.player.renderHealth();
-                this.destroySelf();
+                if(Util.collides(this, this.scene.my.sprite.player))
+                {
+                    this.scene.my.sprite.player.health -= 1;
+                    this.scene.my.sprite.player.renderHealth();
+                    this.destroySelf();
+                }
             }
         }
     }

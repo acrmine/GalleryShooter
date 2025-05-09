@@ -26,11 +26,11 @@ class Player extends Phaser.GameObjects.Sprite
         this.healthWidth = healthTexture.width * this.healthIconScale;
         this.healthHeight = healthTexture.height * this.healthIconScale;
 
-        this.deathWait = 100;
+        this.deathWait = 30;
         this.currentTime = 0;
         this.renderHealth();
         this.score = 0;
-        this.scoreLabel = scene.add.bitmapText(game.config.width - 8, 30, "block_font", "Score: " + this.score, 30).setOrigin(1).setDepth(4);
+        this.scoreLabel = scene.add.bitmapText(game.config.width - 8, 4, "block_font", "Score: " + this.score, 30).setOrigin(1, 0).setDepth(4);
 
 
         this.rx = this.displayWidth/2;
@@ -100,7 +100,7 @@ class Player extends Phaser.GameObjects.Sprite
 
             for(let bullet of this.bulletGroup.getChildren())
             {
-                if(bullet.collidePlayer)
+                if(bullet.collidePlayer && this.active)
                 {
                     if(Util.collides(this, bullet))
                     {
@@ -150,8 +150,6 @@ class Player extends Phaser.GameObjects.Sprite
         {
             this.visible = false;
             this.active = false;
-            this.rx = 0;
-            this.ry = 0;
         }
     }
 

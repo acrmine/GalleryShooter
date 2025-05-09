@@ -14,29 +14,6 @@ class MainStage extends Phaser.Scene
         Player.preload(this);
         Bullet.preload(this);
         Enemy.preload(this);
-
-        this.load.image("starBackground", "star_background.gif");
-    }
-
-    createBackground(textureName)
-    {
-        this.backgroundSprites = [];
-        this.backgroundSprites.push(this.add.tileSprite(game.config.width/2, game.config.height/2, 
-                                                        game.config.width, game.config.height, textureName));
-        this.backgroundSprites.push(this.add.tileSprite(game.config.width/2, -(game.config.height/2), 
-                                                        game.config.width, game.config.height, textureName));
-    }
-
-    updateBackground(speed)
-    {
-        let backgroundSprite1 = this.backgroundSprites[0];
-        let backgroundSprite2 = this.backgroundSprites[1];
-        backgroundSprite1.y += speed;
-        backgroundSprite2.y += speed;
-        if(backgroundSprite1.y > game.config.height * 1.5)
-            backgroundSprite1.y = backgroundSprite2.y - game.config.height;
-        if(backgroundSprite2.y > game.config.height * 1.5)
-            backgroundSprite2.y = backgroundSprite1.y - game.config.height;
     }
 
     create()
@@ -46,7 +23,7 @@ class MainStage extends Phaser.Scene
         this.left = this.input.keyboard.addKey("LEFT");
         this.right = this.input.keyboard.addKey("RIGHT");
 
-        this.createBackground("starBackground");
+        Util.createBackground(this, "starBackground");
 
         my.sprite.bulletGroup = this.add.group({
             active: true,
@@ -80,6 +57,6 @@ class MainStage extends Phaser.Scene
     {
         this.my.sprite.player.update();
 
-        this.updateBackground(9);
+        Util.updateBackground(this, 9);
     }
 }

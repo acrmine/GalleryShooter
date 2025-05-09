@@ -31,7 +31,7 @@ let config = {
     },
     width: 600,
     height: 800,
-    scene: [MainStage, DeathScreen]
+    scene: [TitleScreen, MainStage, DeathScreen]
 }
 
 const game = new Phaser.Game(config);
